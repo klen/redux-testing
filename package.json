@@ -1,6 +1,6 @@
 {
   "name": "redux-testing",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A library to testing your redux application",
   "main": "lib/redux-resting.js",
   "babel": {
