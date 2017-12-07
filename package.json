@@ -2,7 +2,7 @@
   "name": "redux-testing",
   "version": "0.0.5",
   "description": "A library to testing your redux application",
-  "main": "lib/redux-resting.js",
+  "main": "lib/redux-testing.js",
   "babel": {
     "presets": [
       "env"
