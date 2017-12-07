@@ -6,7 +6,7 @@ TYPES =
 
 ACTIONS = []
 
-isObject = (obj) -> obj? and typeof obj == 'object'
+isObject = (obj) -> obj? and typeof obj == 'object' and not (obj instanceof Array)
 
 module.exports = (createStore) -> (appReducer, preloadedState, enhancer) ->
 
