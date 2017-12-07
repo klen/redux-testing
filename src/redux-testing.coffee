@@ -6,6 +6,8 @@ TYPES =
 
 ACTIONS = []
 
+isObject = (obj) -> obj? and typeof obj == 'object'
+
 module.exports = (createStore) -> (appReducer, preloadedState, enhancer) ->
 
     # Support reseting
@@ -42,4 +44,12 @@ module.exports = (createStore) -> (appReducer, preloadedState, enhancer) ->
                 ACTIONS.push(action)
         return store.dispatch(action)
 
-    return {store..., dispatch}
+    getActions = -> dispatch(type: TYPES.ACTIONS)
+    getAction = -> dispatch(type: TYPES.ACTION)
+    clearActions = -> ACTIONS = []
+    reset = -> dispatch(type: TYPES.RESET)
+    update = (state, path) ->
+        return dispatch(type: TYPES.UPDATE, value: state, path: path) unless isObject(state)
+        update(v, if path then "#{path}.#{k}" else k) for k, v of state
+
+    return {store..., dispatch, getActions, getAction, clearActions, reset, update}

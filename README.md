@@ -52,17 +52,26 @@ store.getState()  // -> 1
 
 // We can get list of actions
 actions = store.dispatch({ type: 'TESTS/ACTIONS' }) // -> [{type: 'INCREMENT', ...}, ...]
+// Or you can use store.getActions
+actions = store.getActions()
 
 // We can get a last action
 action = store.dispatch ({ type: 'TESTS/ACTION' }) // -> {type: 'DECREMENT', ...}, ...
+// Or you can use store.getAction
+actions = store.getAction()
 
 // We can reset whole store to initial state, actions will be reseted too
 store.dispatch ({ type: 'TESTS/RESET' })
 store.getState()  // -> 0
+// Or you can use store.reset
+store.reset()
 
 // We can manually setup any part of our state
 // Complex paths also supported: for example: dispatch type: 'TESTS/UPDATE', path: 'deep.inside.state', value: 'some_value'
 store.dispatch ({ type: 'TESTS/UPDATE', value: 5 })
+store.getState()  // -> 5
+// Or you can use store.update
+store.update(5)
 store.getState()  // -> 5
 
 ```
@@ -70,15 +79,16 @@ store.getState()  // -> 5
 ## Actions
 
 The enhancer adding custom reducer/actions for your tests. Dispatch them as
-usual and get actions/change state as you want.
+usual and get actions/change state as you want. Also every action implemented
+as separate store method.
 
-*type: TESTS/ACTIONS* — Get list of dispatched actions
+*type: TESTS/ACTIONS* (store.getActions) — Get list of dispatched actions
 
-*type: TESTS/ACTION* — Get a last dispatched action
+*type: TESTS/ACTION* (store.getAction) — Get a last dispatched action
 
-*type: TESTS/RESET* — Reset store to initial state (reinitialize the store's reducers)
+*type: TESTS/RESET* (store.reset) — Reset store to initial state (reinitialize the store's reducers)
 
-*type: TESTS/UPDATE, value: <new value>, [path: 'path.to.state.part']* — Update store's state (path param is optional)
+*type: TESTS/UPDATE, value: <new value>, [path: 'path.to.state.part']* (store.update) — Update store's state (path param is optional)
 
 ## License
 

@@ -40,8 +40,12 @@ exports.ReduxTesting =
         @store.dispatch type: 'DECREMENT'
         actions = @store.dispatch type: 'TESTS/ACTIONS'
         test.equal(actions.length, 2, 'Actions are recorded')
+        actions = @store.getActions()
+        test.equal(actions.length, 2, 'Actions are recorded')
         
         action = @store.dispatch type: 'TESTS/ACTION'
+        test.equal(action.type, 'DECREMENT', 'Last action is recorded')
+        action = @store.getAction()
         test.equal(action.type, 'DECREMENT', 'Last action is recorded')
 
         @store.dispatch type: 'TESTS/RESET'
@@ -65,18 +69,26 @@ exports.ReduxTesting =
         @store.dispatch type: 'TESTS/RESET'
         state = @store.getState()
         test.equal(state, @initial, 'State has to be reseted')
+        @store.reset()
+        test.equal(state, @initial, 'State has to be reseted')
 
         @store.dispatch type: 'TESTS/UPDATE', path: 'value', value: 4
         state = @store.getState()
-        test.deepEqual(state.value, 4, 'State has to be updated')
+        test.equal(state.value, 4, 'State has to be updated')
+        @store.update(value: 5)
+        test.equal(state.value, 5, 'State has to be updated')
 
         @store.dispatch type: 'TESTS/UPDATE', path: 'deep.inside.value', value: 'changed'
         state = @store.getState()
         test.equal(state.deep.inside.value, 'changed', 'State has to be updated')
+        @store.update(deep: inside: value: 'changed more')
+        test.equal(state.deep.inside.value, 'changed more', 'State has to be updated')
 
         @store.dispatch type: 'TESTS/UPDATE', path: 'deep.inside', value: {replaced: true}
         state = @store.getState()
         test.deepEqual(state.deep.inside, {replaced: true}, 'State has to be updated')
+        @store.update(deep: inside: value: replaced: false)
+        test.deepEqual(state.deep.inside, {replaced: false}, 'State has to be updated')
 
         test.done()
 
