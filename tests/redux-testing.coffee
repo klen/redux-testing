@@ -72,7 +72,11 @@ exports.ReduxTesting =
 
         @store.dispatch type: 'TESTS/UPDATE', path: 'deep.inside.value', value: 'changed'
         state = @store.getState()
-        test.equal(state.deep.inside.value, 'changed', 'State has to be reseted')
+        test.equal(state.deep.inside.value, 'changed', 'State has to be updated')
+
+        @store.dispatch type: 'TESTS/UPDATE', path: 'deep.inside', value: {replaced: true}
+        state = @store.getState()
+        test.deepEqual(state.deep.inside, {replaced: true}, 'State has to be updated')
 
         test.done()
 

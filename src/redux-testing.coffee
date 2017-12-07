@@ -15,10 +15,11 @@ module.exports = (createStore) -> (appReducer, preloadedState, enhancer) ->
                 value = action.value
                 return value unless action.path
                 cursor = state
-                for part in action.path.split('.')
+                [paths..., tail] = action.path.split('.')
+                for part in paths
                     obj = cursor[part]
                     cursor = cursor[part] = {obj...} if obj? and typeof obj == 'object'
-                cursor[part] = value
+                cursor[tail] = value
                 return {state...}
 
             when TYPES.RESET then appReducer(undefined, action)
