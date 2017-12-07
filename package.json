@@ -1,0 +1,43 @@
+{
+  "name": "redux-testing",
+  "version": "0.0.0",
+  "description": "A library to testing your redux application",
+  "main": "lib/redux-resting.js",
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klen/redux-testing.git"
+  },
+  "keywords": [
+    "redux",
+    "redux-testing"
+  ],
+  "author": "Kirill Klenov <horneds@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/klen/redux-testing/issues"
+  },
+  "homepage": "https://github.com/klen/redux-testing#readme",
+  "coffeelintConfig": {
+    "max_line_length": {
+      "value": 120,
+      "level": "error"
+    }
+  },
+  "dependencies": {
+    "redux": "^3.7.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "coffeescript": "^2.0.0",
+    "nodeunit": "^0.11.2"
+  }
+}
