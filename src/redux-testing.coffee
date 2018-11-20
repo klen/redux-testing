@@ -46,7 +46,7 @@ module.exports = (createStore) -> (appReducer, preloadedState, enhancer) ->
         return store.dispatch(action)
 
     getActions = -> dispatch(type: TYPES.ACTIONS)
-    getAction = -> dispatch(type: TYPES.ACTION)
+    getAction = (payload) -> dispatch({payload, type: TYPES.ACTION})
     clearActions = -> ACTIONS = []
     reset = -> dispatch(type: TYPES.RESET)
     update = (state, path) ->

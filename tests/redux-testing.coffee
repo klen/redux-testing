@@ -48,6 +48,9 @@ exports.ReduxTesting =
         action = @store.getAction()
         test.equal(action.type, 'DECREMENT', 'Last action is recorded')
 
+        action = @store.getAction(1)
+        test.equal(action.type, 'INCREMENT', 'Previous action is recorded')
+
         @store.dispatch type: 'TESTS/RESET'
         actions = @store.dispatch type: 'TESTS/ACTIONS'
         test.equal(actions.length, 0, 'Actions have been reseted')
