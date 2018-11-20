@@ -37,7 +37,8 @@ module.exports = (createStore) -> (appReducer, preloadedState, enhancer) ->
                 return ACTIONS
             when TYPES.ACTION
                 length = ACTIONS.length or 0
-                return ACTIONS[length - 1]
+                idx = action.payload or 0
+                return ACTIONS[length - 1 - idx]
             when TYPES.RESET
                 ACTIONS = []
             else
