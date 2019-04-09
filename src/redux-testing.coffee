@@ -49,8 +49,16 @@ module.exports = (createStore) -> (appReducer, preloadedState, enhancer) ->
     getAction = (payload) -> dispatch({payload, type: TYPES.ACTION})
     clearActions = -> ACTIONS = []
     reset = -> dispatch(type: TYPES.RESET)
-    update = (state, path) ->
-        return dispatch(type: TYPES.UPDATE, value: state, path: path) unless isObject(state)
-        update(v, if path then "#{path}.#{k}" else k) for k, v of state
+    update = (path, value) ->
+        if isObject(path)
+            value = path
+            path = []
+            while isObject(value)
+                for k, value of value
+                    path.push(k)
+                    break
+            path = path.join('.')
+
+        return dispatch({value, path, type: TYPES.UPDATE}) unless isObject(path)
 
     return {store..., dispatch, getActions, getAction, clearActions, reset, update}
