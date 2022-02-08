@@ -1,12 +1,14 @@
 # redux-testing
 
 [![npm version](https://badge.fury.io/js/redux-testing.svg)](https://badge.fury.io/js/redux-testing)
-[![travis build](https://travis-ci.org/klen/redux-testing.svg?branch=develop)](https://travis-ci.org/klen/redux-testing)
 
-A library to testing your redux application. The library is allowing you to use
-your real redux store inside your tests. Reset or update it's state and check
-your actions. I like projects like `redux-mock-store` but some times I really
-need my application store, with inited state and ability to dispatch actions.
+A library to testing your [Redux](https://reduxjs.org) application.
+
+Features:
+
+* Reset store's state
+* Update any part of store's state
+* Record and check recorded actions
 
 ## Installation
 
