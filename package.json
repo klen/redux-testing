@@ -1,6 +1,6 @@
 {
   "name": "redux-testing",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "description": "A library to testing your redux application",
   "main": "lib/redux-testing.js",
   "module": "es/redux-testing.js",
