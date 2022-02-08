@@ -17,9 +17,7 @@ test t: node_modules
 
 RELEASE ?= patch
 release path:
-	make build
 	bumpversion $(RELEASE)
-	make publish
 	git checkout master
 	git merge develop
 	git checkout develop
