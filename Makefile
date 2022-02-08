@@ -1,15 +1,16 @@
-$(CURDIR)/node_modules: package.json
+node_modules: package.json
 	npm install
-	touch $(CURDIR)/node_modules
+	touch node_modules
 
-build: $(CURDIR)/node_modules
-	$(CURDIR)/node_modules/.bin/coffee -t -b -o lib/ -c src/
+build: node_modules
+	BABEL_ENV=commonjs $(CURDIR)/node_modules/.bin/babel src/redux-testing.js --out-dir lib
+	$(CURDIR)/node_modules/.bin/babel src/redux-testing.js --out-dir es
 
 publish:
 	npm publish
 
-test t: $(CURDIR)/node_modules
-	node tests/runner.js
+test t: node_modules
+	@./node_modules/.bin/jest
 
 RELEASE ?= patch
 release:

@@ -11,36 +11,52 @@ need my application store, with inited state and ability to dispatch actions.
 ## Installation
 
 ```bash
-npm install --save redux-testing
+npm install --save-dev redux-testing
 ```
 
 ## Usage
 
+### Initialize a store
+
 ```javascript
+import { createStore } from 'redux'
+import testsEnhancer from 'redux-testing'
 
-Redux = require('redux')
-testing = require('redux-testing')
-
-// Let's create a simplest reducer
-reducer = (state=0, action) => {
+// A simple reducer for an example
+const reducer = (state = 0, action) => {
     switch (action.type) {
-        case 'INCREMENT': return state + 1;
-        case 'DECREMENT': return state - 1;
-        default: return state;
+    case 'INCREMENT':
+        return state + 1;
+    case 'DECREMENT':
+        return state - 1;
+    default:
+        return state;
     }
-}
+};
 
-configureStore = (reducer, initial, tests=false) => {
-    // If you already have an enhancer (middlewares/devtools and etc)
-    // use Redux.compose(enhancer, testing)
-    // for example we are just using only one enhancer from the lib
-    enhancer = testing
-    return Redux.createStore(reducer, initial, enhancer)
-}
+// Initialize a store with the testsEnhancer
+const store = createStore(reducer, undefined, testsEnhancer)
+```
 
+### Use with middlewares
 
-// Initialize application store with testing enhancer
-store = configureStore(reducer, 0, true)
+```javascript
+import { createStore, compose, applyMiddleware } from 'redux'
+
+// Prepare middlewares
+let enhancer = applyMiddleware(middleware1, middleware2)
+
+// Optionally apply the testsEnhancer for testing
+if (process.env.NODE_ENV == 'DEVELOPMENT') enhancer = compose(enhancer, testsEnhancer)
+
+// Initialize a store with the enhancer
+const store = createStore(reducer, undefined, enhancer)
+```
+
+### Reset store
+
+```javascript
+import { reset } from 'redux-testing'
 
 // Lets make some actions
 store.dispatch({ type: 'INCREMENT' })
@@ -48,47 +64,96 @@ store.dispatch({ type: 'INCREMENT' })
 store.dispatch({ type: 'DECREMENT' })
 
 // State has been changed
-store.getState()  // -> 1
+expect(store.getState()).toBe(1) // 0 + 1 + 1 - 1 = 1
 
-// We can get list of actions
-actions = store.dispatch({ type: 'TESTS/ACTIONS' }) // -> [{type: 'INCREMENT', ...}, ...]
-// Or you can use store.getActions
-actions = store.getActions()
+reset(store)
 
-// We can get a last action
-action = store.dispatch ({ type: 'TESTS/ACTION' }) // -> {type: 'DECREMENT', ...}, ...
-// Or you can use store.getAction
-actions = store.getAction()
+expect(store.getState()).toBe(0) // initial state
+```
 
-// We can reset whole store to initial state, actions will be reseted too
-store.dispatch ({ type: 'TESTS/RESET' })
-store.getState()  // -> 0
-// Or you can use store.reset
-store.reset()
+### Update store state
+```javascript
+import { update } from 'redux-testing'
 
-// We can manually setup any part of our state
-// Complex paths also supported: for example: dispatch type: 'TESTS/UPDATE', path: 'deep.inside.state', value: 'some_value'
-store.dispatch ({ type: 'TESTS/UPDATE', value: 5 })
-store.getState()  // -> 5
-// Or you can use store.update
-store.update(5)
-store.getState()  // -> 5
+update(store, 42)
+expect(store.getState()).toBe(42)
+
+/** Other examples
+*
+* // Update by object
+* update(store, {deep: {child: {state: { value: 42}}}})
+*
+* // Update by path
+* update(store, 42, 'deep.child.state.value')
+*/
+```
+
+### Get recorded actions
+
+```javascript
+import { getActions } from 'redux-testing'
+
+// Lets make some actions
+store.dispatch({ type: 'INCREMENT' })
+store.dispatch({ type: 'INCREMENT' })
+store.dispatch({ type: 'DECREMENT' })
+
+const actions = getActions(store)
+expect(actions).toEqual([
+  {type: 'INCREMENT'}, {type: 'INCREMENT'}, {type: 'DECREMENT'}
+])
 
 ```
 
-## Actions
+### Get an recorded action
 
-The enhancer adding custom reducer/actions for your tests. Dispatch them as
-usual and get actions/change state as you want. Also every action implemented
-as separate store method.
+```javascript
+import { getAction } from 'redux-testing'
 
-*type: TESTS/ACTIONS* (store.getActions) — Get list of dispatched actions
+// Lets make some actions
+store.dispatch({ type: 'INCREMENT' });
+store.dispatch({ type: 'INCREMENT' });
+store.dispatch({ type: 'DECREMENT' });
 
-*type: TESTS/ACTION* (store.getAction) — Get a last dispatched action
+let action;
 
-*type: TESTS/RESET* (store.reset) — Reset store to initial state (reinitialize the store's reducers)
+// Get latest action
+action = getAction(store);
+expect(action).toEqual({ type: 'DECREMENT' });
 
-*type: TESTS/UPDATE, value: <new value>, [path: 'path.to.state.part']* (store.update) — Update store's state (path param is optional)
+// Get action by index
+action = getAction(store, 0);
+expect(action).toEqual({ type: 'INCREMENT' });
+action = getAction(store, 2);
+expect(action).toEqual({ type: 'DECREMENT' });
+
+// Get relative action
+action = getAction(store, -1); // previous before latest
+expect(action).toEqual({ type: 'INCREMENT' });
+action = getAction(store, -2); // previous before above
+expect(action).toEqual({ type: 'INCREMENT' });
+```
+
+### Clear actions
+
+```javascript
+import { clearActions } from 'redux-testing'
+
+// Lets make some actions
+store.dispatch({ type: 'INCREMENT' });
+store.dispatch({ type: 'INCREMENT' });
+store.dispatch({ type: 'DECREMENT' });
+
+// Ensure that we have actions recorded
+expect(getActions(store)).toBeTruthy();
+
+// Reset the recorded actions
+clearActions(store);
+
+// Ensure that we have cleared the records
+expect(getActions(store)).toEqual([]);
+
+```
 
 ## License
 
