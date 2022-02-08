@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  workflow_run:
+    workflows: [Tests]
+    branches: [master]
+    types: [completed]
+
+jobs:
+  build:
+    name: Build/Publish
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@main
+
+      - name: Set up Node
+        uses: actions/setup-node@main
+        with:
+          cache: 'npm'
+
+      - name: Build
+        run: make build
+
+      - name: Publish
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
