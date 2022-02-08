@@ -1,5 +1,7 @@
 # redux-testing
 
+[![Tests](https://github.com/klen/redux-testing/actions/workflows/test.yml/badge.svg)](https://github.com/klen/redux-testing/actions/workflows/test.yml)
+[![Build](https://github.com/klen/redux-testing/actions/workflows/build.yml/badge.svg)](https://github.com/klen/redux-testing/actions/workflows/build.yml)
 [![npm version](https://badge.fury.io/js/redux-testing.svg)](https://badge.fury.io/js/redux-testing)
 
 A library to testing your [Redux](https://reduxjs.org) application.
