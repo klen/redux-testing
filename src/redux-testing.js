@@ -3,36 +3,36 @@ export const TESTING_TYPES = {
   GET_ACTIONS: 'TESTS/GET_ACTIONS',
   CLEAR_ACTIONS: 'TESTS/CLEAR_ACTIONS',
   RESET: 'TESTS/RESET',
-  UPDATE: 'TESTS/UPDATE',
-};
+  UPDATE: 'TESTS/UPDATE'
+}
 
 /**
  * Reset the given store
  * @return {void}
  */
-export const reset = ({ dispatch }) => dispatch({ type: TESTING_TYPES.RESET });
+export const reset = ({ dispatch }) => dispatch({ type: TESTING_TYPES.RESET })
 
 /**
  * Update the given store
  * @return {void}
  */
 export const update = (store, value, path) => {
-  store.dispatch({ type: TESTING_TYPES.UPDATE, payload: { value, path } });
-};
+  store.dispatch({ type: TESTING_TYPES.UPDATE, payload: { value, path } })
+}
 
 /**
  * Get logged actions from the given store
  * @return {{type}[]} list of actions
  */
 export const getActions = ({ dispatch }) =>
-  dispatch({ type: TESTING_TYPES.GET_ACTIONS });
+  dispatch({ type: TESTING_TYPES.GET_ACTIONS })
 
 /**
  * Clear logged actions from the given store
  * @return {void}
  */
 export const clearActions = ({ dispatch }) =>
-  dispatch({ type: TESTING_TYPES.CLEAR_ACTIONS });
+  dispatch({ type: TESTING_TYPES.CLEAR_ACTIONS })
 
 /**
  * Get a logged action from the given store
@@ -41,7 +41,7 @@ export const clearActions = ({ dispatch }) =>
  * @return {{type} | null} an optional action
  */
 export const getAction = ({ dispatch }, index) =>
-  dispatch({ type: TESTING_TYPES.GET_ACTION, payload: index });
+  dispatch({ type: TESTING_TYPES.GET_ACTION, payload: index })
 
 /**
  * Enhance the given store with the testing functions
@@ -49,67 +49,66 @@ export const getAction = ({ dispatch }, index) =>
  */
 export const enhancer =
   createStore => (appReducer, preloadedState, enhancer) => {
-    const actionsLog = [];
+    const actionsLog = []
 
-    function reducer(state, action = {}) {
+    function reducer (state, action = {}) {
       switch (action.type) {
         case TESTING_TYPES.UPDATE:
-          return applyUpdate(state, action.payload.value, action.payload.path);
+          return applyUpdate(state, action.payload.value, action.payload.path)
 
         case TESTING_TYPES.RESET:
-          return appReducer(undefined, action);
+          return appReducer(undefined, action)
 
         default:
-          return appReducer(state, action);
+          return appReducer(state, action)
       }
     }
 
     // Create a store
-    const store = createStore(reducer, preloadedState, enhancer);
+    const store = createStore(reducer, preloadedState, enhancer)
 
     // Support testing actions
-    function dispatch(action = {}) {
+    function dispatch (action = {}) {
       switch (action?.type) {
         case TESTING_TYPES.GET_ACTIONS:
-          return actionsLog;
+          return actionsLog
 
         case TESTING_TYPES.GET_ACTION:
           return action.payload >= 0
             ? actionsLog[action.payload]
-            : actionsLog[actionsLog.length - 1 + (action.payload || 0)];
+            : actionsLog[actionsLog.length - 1 + (action.payload || 0)]
 
         case TESTING_TYPES.CLEAR_ACTIONS:
-          return (actionsLog.length = 0);
+          return (actionsLog.length = 0)
 
         case TESTING_TYPES.RESET:
-          actionsLog.length = 0;
-          break;
+          actionsLog.length = 0
+          break
 
         case TESTING_TYPES.UPDATE:
-          break;
+          break
 
         default:
-          actionsLog.push(action);
-          break;
+          actionsLog.push(action)
+          break
       }
-      return store.dispatch(action);
+      return store.dispatch(action)
     }
 
-    return { ...store, dispatch };
-  };
+    return { ...store, dispatch }
+  }
 
-export default enhancer;
+export default enhancer
 
-function applyUpdate(state, value, path) {
-  if (typeof state != 'object') return value;
+function applyUpdate (state, value, path) {
+  if (typeof state !== 'object') return value
   if (path && path.length > 0) {
     value = path
       .split('.')
       .reverse()
-      // eslint-disable-next-line unicorn/no-array-reduce
-      .reduce((value, name) => ({ [name]: value }), value);
-    return applyUpdate(state, value);
+      .reduce((value, name) => ({ [name]: value }), value)
+    return applyUpdate(state, value)
   }
-  for (let name in value) state[name] = applyUpdate(state[name], value[name]);
-  return state;
+  for (const name in value) state[name] = applyUpdate(state[name], value[name])
+  return state
 }

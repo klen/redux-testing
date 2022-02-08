@@ -9,6 +9,9 @@ build: node_modules
 publish:
 	npm publish
 
+lint: node_modules
+	@./node_modules/.bin/eslint src/*.js
+
 test t: node_modules
 	@./node_modules/.bin/jest
 
