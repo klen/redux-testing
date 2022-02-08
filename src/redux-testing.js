@@ -18,6 +18,7 @@ export const reset = ({ dispatch }) => dispatch({ type: TESTING_TYPES.RESET })
  */
 export const update = (store, value, path) => {
   store.dispatch({ type: TESTING_TYPES.UPDATE, payload: { value, path } })
+  return store.getState()
 }
 
 /**
@@ -95,7 +96,15 @@ export const enhancer =
       return store.dispatch(action)
     }
 
-    return { ...store, dispatch }
+    return {
+      ...store,
+      dispatch,
+      getActions: () => getActions(store),
+      clearActions: () => clearActions(store),
+      getAction: (index) => getAction(store, index),
+      reset: () => reset(store),
+      update: (value, path) => update(store, value, path)
+    }
   }
 
 export default enhancer

@@ -159,6 +159,20 @@ expect(getActions(store)).toEqual([]);
 
 ```
 
+## Store methods
+
+As an alternative after enhancing a store, these methods are available:
+
+```javascript
+expect(store.getActions()).toBeTruthy()
+expect(store.getAction()).toBeTruthy()
+expect(store.clearActions()).toBeTruthy()
+expect(store.reset()).toBeTruthy()
+expect(store.update("changed", "deep.child2.value")).toBeTruthy()
+```
+
+the methods' signatures are the same as the related functions above.
+
 ## License
 
 This project is licensed under the MIT license, Copyright (c) 2017 Kirill Klenov. For more information see `LICENSE.md`.

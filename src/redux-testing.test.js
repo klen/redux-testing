@@ -104,7 +104,16 @@ describe('redux-testing', () => {
       actions = getActions(store)
       expect(actions.length).toBe(0)
     })
+
+    it('store methods', async () => {
+      expect(store.getActions()).toBeTruthy()
+      expect(store.getAction()).toBeTruthy()
+      expect(store.clearActions()).toBeTruthy()
+      expect(store.reset()).toBeTruthy()
+      expect(store.update('changed', 'deep.child2.value')).toBeTruthy()
+    })
   })
+
   describe('readme examples', () => {
     const reducer = (state = 0, action) => {
       switch (action.type) {
