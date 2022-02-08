@@ -16,7 +16,7 @@ test t: node_modules
 	@./node_modules/.bin/jest
 
 RELEASE ?= patch
-release:
+release path:
 	make build
 	bumpversion $(RELEASE)
 	make publish
@@ -24,3 +24,9 @@ release:
 	git merge develop
 	git checkout develop
 	git push origin develop master
+
+minor:
+	make release RELEASE=minor
+
+major:
+	make release RELEASE=major
