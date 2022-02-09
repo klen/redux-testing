@@ -18,9 +18,9 @@ Features:
 npm install --save-dev redux-testing
 ```
 
-## Usage
+## Initialization
 
-### Initialize a store
+First you have to install `testsEnhancer` to your store:
 
 ```javascript
 import { createStore } from 'redux'
@@ -42,7 +42,7 @@ const reducer = (state = 0, action) => {
 const store = createStore(reducer, undefined, testsEnhancer)
 ```
 
-### Use with middlewares
+If you are using middlewares or other enhancers
 
 ```javascript
 import { createStore, compose, applyMiddleware } from 'redux'
@@ -57,11 +57,13 @@ if (process.env.NODE_ENV == 'DEVELOPMENT') enhancer = compose(enhancer, testsEnh
 const store = createStore(reducer, undefined, enhancer)
 ```
 
+## Usage
+
 ### Reset store
 
-```javascript
-import { reset } from 'redux-testing'
+Reset you store and actions log any time:
 
+```javascript
 // Lets make some actions
 store.dispatch({ type: 'INCREMENT' })
 store.dispatch({ type: 'INCREMENT' })
@@ -70,39 +72,38 @@ store.dispatch({ type: 'DECREMENT' })
 // State has been changed
 expect(store.getState()).toBe(1) // 0 + 1 + 1 - 1 = 1
 
-reset(store)
+store.reset()
 
 expect(store.getState()).toBe(0) // initial state
 ```
 
 ### Update store state
-```javascript
-import { update } from 'redux-testing'
 
-update(store, 42)
+Customize your store state:
+
+```javascript
+store.update(42)
 expect(store.getState()).toBe(42)
 
 /** Other examples
 *
 * // Update by object
-* update(store, {deep: {child: {state: { value: 42}}}})
+* store.update({deep: {child: {state: { value: 42}}}})
 *
 * // Update by path
-* update(store, 42, 'deep.child.state.value')
+* store.update(42, 'deep.child.state.value')
 */
 ```
 
 ### Get recorded actions
 
 ```javascript
-import { getActions } from 'redux-testing'
-
 // Lets make some actions
 store.dispatch({ type: 'INCREMENT' })
 store.dispatch({ type: 'INCREMENT' })
 store.dispatch({ type: 'DECREMENT' })
 
-const actions = getActions(store)
+const actions = store.getActions()
 expect(actions).toEqual([
   {type: 'INCREMENT'}, {type: 'INCREMENT'}, {type: 'DECREMENT'}
 ])
@@ -112,8 +113,6 @@ expect(actions).toEqual([
 ### Get an recorded action
 
 ```javascript
-import { getAction } from 'redux-testing'
-
 // Lets make some actions
 store.dispatch({ type: 'INCREMENT' });
 store.dispatch({ type: 'INCREMENT' });
@@ -122,56 +121,40 @@ store.dispatch({ type: 'DECREMENT' });
 let action;
 
 // Get latest action
-action = getAction(store);
+action = store.getAction();
 expect(action).toEqual({ type: 'DECREMENT' });
 
 // Get action by index
-action = getAction(store, 0);
+action = store.getAction(0);
 expect(action).toEqual({ type: 'INCREMENT' });
-action = getAction(store, 2);
+action = store.getAction(2);
 expect(action).toEqual({ type: 'DECREMENT' });
 
 // Get relative action
-action = getAction(store, -1); // previous before latest
+action = store.getAction(-1); // previous before latest
 expect(action).toEqual({ type: 'INCREMENT' });
-action = getAction(store, -2); // previous before above
+action = store.getAction(-2); // previous before above
 expect(action).toEqual({ type: 'INCREMENT' });
 ```
 
 ### Clear actions
 
 ```javascript
-import { clearActions } from 'redux-testing'
-
 // Lets make some actions
 store.dispatch({ type: 'INCREMENT' });
 store.dispatch({ type: 'INCREMENT' });
 store.dispatch({ type: 'DECREMENT' });
 
 // Ensure that we have actions recorded
-expect(getActions(store)).toBeTruthy();
+expect(store.getActions()).toBeTruthy();
 
 // Reset the recorded actions
-clearActions(store);
+store.clearActions();
 
 // Ensure that we have cleared the records
-expect(getActions(store)).toEqual([]);
+expect(store.getActions()).toEqual([]);
 
 ```
-
-## Store methods
-
-As an alternative after enhancing a store, these methods are available:
-
-```javascript
-expect(store.getActions()).toBeTruthy()
-expect(store.getAction()).toBeTruthy()
-expect(store.clearActions()).toBeTruthy()
-expect(store.reset()).toBeTruthy()
-expect(store.update("changed", "deep.child2.value")).toBeTruthy()
-```
-
-the methods' signatures are the same as the related functions above.
 
 ## License
 
