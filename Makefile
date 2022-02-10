@@ -3,7 +3,10 @@ node_modules: package.json
 	touch node_modules
 
 build: node_modules
-	@./node_modules/.bin/tsc -b
+	@rm -rf dist
+	@npx tsc
+	@npx tsc -p tsconfig-esm.json
+	@npx prettier -w dist/**/*.*s
 
 publish:
 	npm publish
