@@ -1,6 +1,6 @@
 {
   "name": "redux-testing",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "A library to testing your redux application",
   "main": "dist/cjs/redux-testing.js",
   "module": "dist/cjs/redux-testing.js",
