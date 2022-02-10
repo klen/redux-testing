@@ -20,11 +20,11 @@ npm install --save-dev redux-testing
 
 ## Initialization
 
-First you have to install `testsEnhancer` to your store:
+First you have to install `testEnhancer` to your store:
 
 ```javascript
 import { createStore } from 'redux'
-import testsEnhancer from 'redux-testing'
+import testEnhancer from 'redux-testing'
 
 // A simple reducer for an example
 const reducer = (state = 0, action) => {
@@ -38,8 +38,8 @@ const reducer = (state = 0, action) => {
     }
 };
 
-// Initialize a store with the testsEnhancer
-const store = createStore(reducer, undefined, testsEnhancer)
+// Initialize a store with the testEnhancer
+const store = createStore(reducer, undefined, testEnhancer)
 ```
 
 If you are using middlewares or other enhancers
@@ -50,8 +50,8 @@ import { createStore, compose, applyMiddleware } from 'redux'
 // Prepare middlewares
 let enhancer = applyMiddleware(middleware1, middleware2)
 
-// Optionally apply the testsEnhancer for testing
-if (process.env.NODE_ENV == 'DEVELOPMENT') enhancer = compose(enhancer, testsEnhancer)
+// Optionally apply the testEnhancer for testing
+if (process.env.NODE_ENV == 'DEVELOPMENT') enhancer = compose(testEnhancer, enhancer)
 
 // Initialize a store with the enhancer
 const store = createStore(reducer, undefined, enhancer)
