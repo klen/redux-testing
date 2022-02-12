@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { StoreEnhancer, AnyAction, Store, Reducer, Action, PreloadedState } from 'redux'
 
 export const TESTING_TYPES = {
@@ -89,7 +91,7 @@ export const testEnhancer: StoreEnhancer<TestEnhancerType> =
 
 export default testEnhancer
 
-function applyUpdate<S>(state: S, value, path?: string): S {
+function applyUpdate(state: any, value, path?: string): any {
   if (typeof state !== 'object') return value
   if (path && path.length > 0) {
     value = path
@@ -98,7 +100,6 @@ function applyUpdate<S>(state: S, value, path?: string): S {
       .reduce((value, name) => ({ [name]: value }), value)
     return applyUpdate(state, value)
   }
-
   for (const name in value) state[name] = applyUpdate(state[name], value[name])
-  return state
+  return { ...state }
 }

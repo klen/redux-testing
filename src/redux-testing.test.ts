@@ -20,12 +20,11 @@ describe('redux-testing', () => {
     const store = createStore(reducer, initial, testEnhancer)
 
     beforeEach(() => {
+      store.reset()
       store.dispatch({ type: 'INCREMENT' })
       store.dispatch({ type: 'INCREMENT' })
       store.dispatch({ type: 'DECREMENT' })
     })
-
-    afterEach(store.reset)
 
     it('Redux store is working', async () => {
       const state = store.getState()
@@ -42,7 +41,11 @@ describe('redux-testing', () => {
     })
 
     it('update()', async () => {
+      const state1 = store.getState()
       store.update({ deep: { child1: { value: 'changed' } } })
+      const state2 = store.getState()
+      expect(state1).not.toBe(state2)
+
       expect(store.getState().deep).toEqual({
         child1: { value: 'changed', any: 'any' },
         child2: { value: 'custom2' },
