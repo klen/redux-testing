@@ -95,6 +95,18 @@ expect(store.getState()).toBe(42)
 */
 ```
 
+#### Using with [Immer](https://github.com/immerjs/immer)
+
+Immer freezes your state. If you want to `store.update` is working, be sure
+that you have disable the autofreezing in your tests.
+
+```javascript
+// Setup tests globally
+import { setAutoFreeze } from 'immer'
+
+setAutoFreeze(false)
+```
+
 ### Get recorded actions
 
 ```javascript
@@ -153,6 +165,7 @@ store.clearActions();
 
 // Ensure that we have cleared the records
 expect(store.getActions()).toEqual([]);
+
 
 ```
 
