@@ -18,7 +18,7 @@ test t: node_modules
 	@./node_modules/.bin/jest
 
 RELEASE ?= patch
-release path:
+release patch:
 	bumpversion $(RELEASE)
 	git checkout master
 	git merge develop
