@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { StoreEnhancer, AnyAction, Store, Reducer, Action, PreloadedState } from 'redux'
+import {
+  StoreEnhancer,
+  AnyAction,
+  Store,
+  Reducer,
+  PreloadedState,
+  StoreEnhancerStoreCreator,
+} from 'redux'
 import { applyUpdate } from './utils'
 
 export const TESTING_TYPES = {
@@ -11,7 +18,7 @@ export const TESTING_TYPES = {
   UPDATE: 'TESTS/UPDATE',
 }
 
-type TestEnhancerType = {
+interface TestEnhancerType {
   reset: () => void
   getActions: () => AnyAction[]
   getAction: (index?: number) => AnyAction
@@ -29,16 +36,13 @@ export const clearActions = (store: Store) => store.dispatch({ type: TESTING_TYP
 /**
  * Enhance the given store with the testing functions
  */
-export const testEnhancer: StoreEnhancer<TestEnhancerType> =
-  (createStore) =>
-  <S, A extends Action = AnyAction>(
-    appReducer: Reducer<S, A>,
-    initialState?: PreloadedState<S>,
-  ): Store<S, A> & TestEnhancerType => {
+export const enhancer: StoreEnhancer<TestEnhancerType> =
+  (createStore: StoreEnhancerStoreCreator): StoreEnhancerStoreCreator<TestEnhancerType> =>
+  <S, A extends AnyAction>(appReducer: Reducer<S, A>, preloadedState?: PreloadedState<S>) => {
     const actionsLog: AnyAction[] = []
 
     // Support UPDATE/RESET
-    const reducer = (state, action) => {
+    const reducer = (state: S, action: A) => {
       switch (action.type) {
         case TESTING_TYPES.UPDATE:
           if (action.payload) return applyUpdate(state, action.payload.value, action.payload.path)
@@ -60,7 +64,7 @@ export const testEnhancer: StoreEnhancer<TestEnhancerType> =
     }
 
     // Create a store
-    const store = createStore(reducer, initialState)
+    const store = createStore(reducer, preloadedState)
 
     return {
       ...store,
@@ -70,7 +74,7 @@ export const testEnhancer: StoreEnhancer<TestEnhancerType> =
 
       /** Clear recorded actions */
       clearActions: () => {
-        store.dispatch({ type: TESTING_TYPES.CLEAR_ACTIONS })
+        store.dispatch({ type: TESTING_TYPES.CLEAR_ACTIONS } as A)
       },
 
       /** Get a recorded action
@@ -82,12 +86,12 @@ export const testEnhancer: StoreEnhancer<TestEnhancerType> =
           : actionsLog[actionsLog.length - 1 + (index || 0)],
 
       /** Reset the store */
-      reset: () => store.dispatch({ type: TESTING_TYPES.RESET }),
+      reset: () => store.dispatch({ type: TESTING_TYPES.RESET } as A),
 
       /** Update the store */
       update: (value, path?: string) =>
-        store.dispatch({ type: TESTING_TYPES.UPDATE, payload: { value, path } }),
+        store.dispatch({ type: TESTING_TYPES.UPDATE, payload: { value, path } } as unknown as A),
     }
   }
 
-export default testEnhancer
+export default enhancer

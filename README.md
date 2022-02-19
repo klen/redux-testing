@@ -57,6 +57,9 @@ if (process.env.NODE_ENV == 'DEVELOPMENT') enhancer = compose(testEnhancer, enha
 const store = createStore(reducer, undefined, enhancer)
 ```
 
+For correct usage with [redux-thunk](https://github.com/reduxjs/redux-thunk)
+add `import 'redux-thunk/extend-redux'` to your store file.
+
 ## Usage
 
 ### Reset store

@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose, AnyAction, Middleware } from 'redux'
-import testEnhancer from './redux-testing'
+import enhancer from './redux-testing'
 
 describe('redux-testing', () => {
   describe('base tests', () => {
@@ -17,7 +17,7 @@ describe('redux-testing', () => {
       else if (action.type === 'DECREMENT') state.value -= 1
       return state
     }
-    const store = createStore(reducer, initial, testEnhancer)
+    const store = createStore(reducer, initial, enhancer)
 
     beforeEach(() => {
       store.reset()
@@ -110,7 +110,7 @@ describe('redux-testing', () => {
           return state
       }
     }
-    const store = createStore(reducer, undefined, testEnhancer)
+    const store = createStore(reducer, undefined, enhancer)
 
     afterEach(store.reset)
 
@@ -120,18 +120,14 @@ describe('redux-testing', () => {
         if (action === SKIP) return action
         next(action)
       }
-      let store = createStore(
-        reducer,
-        undefined,
-        compose(testEnhancer, applyMiddleware(middleware)),
-      )
+      let store = createStore(reducer, undefined, compose(enhancer, applyMiddleware(middleware)))
       store.reset()
       expect(store).toBeTruthy()
       store.dispatch({ type: 'INCREMENT' })
       store.dispatch(SKIP)
       expect(store.getActions()).toEqual([{ type: 'INCREMENT' }])
 
-      store = createStore(reducer, undefined, compose(testEnhancer, applyMiddleware(middleware)))
+      store = createStore(reducer, compose(enhancer, applyMiddleware(middleware)))
       store.reset()
       store.dispatch({ type: 'INCREMENT' })
       store.dispatch(SKIP)
